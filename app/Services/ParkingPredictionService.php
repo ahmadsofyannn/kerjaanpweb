@@ -71,7 +71,7 @@ class ParkingPredictionService
         $movingAvg7Days = round(array_sum($last7Days) / 7, 1);
         $movingAvg3Days = round(array_sum(array_slice($last7Days, -3)) / 3, 1);
 
-        // Rata-rata transaksi pada hari yang sama dengan target prediksi (besok untuk 'hari', 7 hari ke depan untuk 'minggu', 30 hari untuk 'bulan')
+        // Rata-rata transaksi pada hari yang sama dengan target prediksi
         $targetDay = $now->copy()->addDay();
         $targetDow = (int) $targetDay->dayOfWeek;
         $sameDowDatesCount = count($dayOfWeekOccurrences[$targetDow] ?? []);
@@ -95,7 +95,7 @@ class ParkingPredictionService
             round(($predictedDailyEntries / $activeSlotCount) * 100, 1)
         );
 
-        // Prediksi per jam (06:00 - 21:00) berdasarkan rata-rata historis per jam dalam 8 minggu
+        // Prediksi per jam (06:00 - 22:00) berdasarkan rata-rata historis per jam dalam 8 minggu
         $weeksLookback = 8;
         $hourlyForecast = [];
         for ($hour = 6; $hour <= 21; $hour++) {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Block;
 use App\Models\ParkingTransaction;
 use App\Models\Vehicle;
 use App\Services\ParkingPredictionService;
@@ -47,6 +48,42 @@ class PublikReportController extends Controller
             'search' => $search,
             'totalVehicles' => $totalVehicles,
             'currentlyParked' => $currentlyParked,
+        ]);
+    }
+
+    /**
+     * Ringkasan okupansi parkir per blok berdasarkan data slot & transaksi aktif.
+     */
+    public function okupansi(): View
+    {
+        $blocks = Block::query()
+            ->with(['slots' => fn ($q) => $q->where('is_active', true)->withCount([
+                'parkingTransactions as active_count' => fn ($tx) => $tx->whereNull('exited_at'),
+            ])])
+            ->orderBy('code')
+            ->get();
+
+        $summary = $blocks->map(function (Block $block): array {
+            $totalSlots = $block->slots->count();
+            $occupied = (int) $block->slots->sum('active_count');
+            $available = max(0, $totalSlots - $occupied);
+            $occupancyPct = $totalSlots > 0 ? round(($occupied / $totalSlots) * 100, 1) : 0.0;
+
+            return [
+                'code' => $block->code,
+                'name' => $block->name,
+                'total_slots' => $totalSlots,
+                'occupied' => $occupied,
+                'available' => $available,
+                'occupancy_pct' => $occupancyPct,
+            ];
+        });
+
+        return view('laporan.okupansi', [
+            'blocks' => $summary,
+            'totalSlots' => $summary->sum('total_slots'),
+            'totalOccupied' => $summary->sum('occupied'),
+            'totalAvailable' => $summary->sum('available'),
         ]);
     }
 

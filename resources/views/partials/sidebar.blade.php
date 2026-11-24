@@ -14,7 +14,7 @@
 
         ['heading' => 'Laporan'],
         ['label' => 'Riwayat Parkir', 'icon' => 'bi-clock-history', 'url' => 'laporan/riwayat',  'match' => 'laporan/riwayat*'],
-        ['label' => 'Okupansi per Blok','icon' => 'bi-bar-chart', 'url' => 'laporan/okupansi', 'match' => 'laporan/okupansi*', 'admin' => true],
+        ['label' => 'Okupansi per Blok','icon' => 'bi-bar-chart', 'url' => 'laporan/okupansi', 'match' => 'laporan/okupansi*'],
 
         ['heading' => 'Administrasi', 'admin' => true],
         ['label' => 'Pengguna', 'icon' => 'bi-people', 'url' => 'users', 'match' => 'users*', 'admin' => true],
@@ -23,6 +23,7 @@
 
         ['heading' => 'Publik'],
         ['label' => 'Peta Parkir', 'icon' => 'bi-map', 'url' => 'peta', 'match' => 'peta'],
+        ['label' => 'Prediksi Parkir', 'icon' => 'bi-graph-up-arrow', 'url' => 'prediksi', 'match' => 'prediksi*'],
     ];
 @endphp
 
